@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <meta name="theme-color" content="#07519a">
+        <title>Offline | Barangay Ward II</title>
+        <style>
+            * { box-sizing: border-box; }
+            body {
+                min-height: 100vh;
+                margin: 0;
+                display: grid;
+                place-items: center;
+                padding: 20px;
+                background: #edf7ff;
+                color: #123d70;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+            .card {
+                width: min(100%, 420px);
+                padding: 28px 24px;
+                border: 1px solid #c6e2fa;
+                border-radius: 14px;
+                background: #fff;
+                text-align: center;
+                box-shadow: 0 12px 30px rgba(20, 58, 96, 0.12);
+            }
+            img { width: 64px; height: 64px; margin-bottom: 12px; }
+            h1 { margin: 0 0 8px; font-size: 1.25rem; }
+            p { margin: 0 0 20px; color: #527698; font-size: 0.92rem; line-height: 1.5; }
+            button {
+                min-height: 44px;
+                padding: 0 22px;
+                border: 0;
+                border-radius: 8px;
+                background: linear-gradient(180deg, #1877d1, #0756a8);
+                color: #fff;
+                font: inherit;
+                font-weight: 700;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <main class="card">
+            <img src="/images/barangay-logo.png" alt="Barangay Ward II Seal">
+            <h1>You are currently offline</h1>
+            <p>Please check your mobile data or Wi-Fi connection and try again to access Barangay Ward II services.</p>
+            <button type="button" onclick="window.location.reload()">Try Again</button>
+        </main>
+    </body>
+</html>

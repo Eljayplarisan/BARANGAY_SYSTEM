@@ -2,8 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Create Resident Account | Barangay Ward II</title>
+        @include('partials.mobile-head')
+        <title>Create Account | Barangay Ward II</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -237,7 +237,8 @@
                 font-weight: 700;
             }
 
-            .field-control input {
+            .field-control input,
+            .field-control select {
                 width: 100%;
                 height: 38px;
                 padding: 0 12px;
@@ -251,36 +252,24 @@
                 transition: border-color 0.15s ease, box-shadow 0.15s ease;
             }
 
+            .field-control select {
+                padding-right: 34px;
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2315548c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 10px center;
+                background-size: 16px 16px;
+                cursor: pointer;
+            }
+
             .field-control input::placeholder {
                 color: #9aabba;
             }
 
-            .field-control input:focus {
+            .field-control input:focus,
+            .field-control select:focus {
                 border-color: #3280c5;
                 box-shadow: 0 0 0 3px rgba(50, 128, 197, 0.13);
-            }
-
-            .role-field {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                min-height: 35px;
-                padding: 0 11px;
-                border: 1px solid #d7e1eb;
-                border-radius: 7px;
-                background: #f5f9fd;
-                color: #345c80;
-                font-size: 0.78rem;
-                font-weight: 700;
-            }
-
-            .role-badge {
-                padding: 4px 9px;
-                border-radius: 999px;
-                background: #e1effb;
-                color: #0756a8;
-                font-size: 0.7rem;
-                font-weight: 800;
             }
 
             .terms-row {
@@ -430,7 +419,8 @@
                     gap: 6px;
                 }
 
-                .field-control input {
+                .field-control input,
+                .field-control select {
                     height: 35px;
                 }
 
@@ -463,22 +453,42 @@
                 }
 
                 .form-panel {
-                    padding: 28px 22px;
+                    padding: 24px 20px;
+                }
+
+                .field-control input,
+                .field-control select {
+                    height: 44px;
+                    font-size: 16px;
+                }
+
+                .register-button {
+                    min-height: 46px;
                 }
             }
 
-            @media (max-width: 380px) {
+            @media (max-width: 480px) {
                 body {
-                    padding: 8px;
+                    padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
                 }
 
                 .form-panel {
-                    padding-inline: 16px;
+                    padding: 20px 16px;
                 }
 
                 .field-row {
                     grid-template-columns: 22px minmax(0, 1fr);
-                    gap: 7px;
+                    gap: 8px;
+                }
+
+                .terms-row,
+                .terms-error,
+                .register-button,
+                .login-prompt,
+                .terms-details {
+                    width: 100%;
+                    justify-self: stretch;
+                    align-self: stretch;
                 }
             }
         </style>
@@ -512,8 +522,8 @@
                         <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="4"></circle><path d="M4 21v-2a8 8 0 0 1 16 0v2z"></path></svg>
                     </span>
                     <div>
-                        <h2 id="register-title">Create Resident Account</h2>
-                        <p>Fill in your details to get started.</p>
+                        <h2 id="register-title">Create Account</h2>
+                        <p>Fill in your details and select your role to get started.</p>
                     </div>
                 </div>
 
@@ -568,11 +578,11 @@
                     <div class="field-row">
                         <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20v-1.5a7 7 0 0 1 14 0V20z"></path></svg>
                         <div class="field-control">
-                            <label>Account Role</label>
-                            <div class="role-field" aria-label="Account role: Resident">
-                                <span>Resident</span>
-                                <span class="role-badge">Resident</span>
-                            </div>
+                            <label for="role">Account Role <span aria-hidden="true">*</span></label>
+                            <select id="role" name="role" required>
+                                <option value="resident" @selected(old('role', 'resident') === 'resident')>Resident</option>
+                                <option value="secretary" @selected(old('role') === 'secretary')>Secretary</option>
+                            </select>
                         </div>
                     </div>
 
@@ -615,11 +625,11 @@
 
                 <details id="terms" class="terms-details">
                     <summary>Terms and Conditions</summary>
-                    <p>Register using accurate information and use this account only to access Barangay Ward II resident services. You are responsible for keeping your password private.</p>
+                    <p>Register using accurate information and use this account only to access Barangay Ward II services. You are responsible for keeping your password private.</p>
                 </details>
                 <details id="privacy" class="terms-details">
                     <summary>Data Privacy Policy</summary>
-                    <p>Your registration details are used to create and manage your resident account and support barangay services. By registering, you consent to this information being stored for those purposes.</p>
+                    <p>Your registration details are used to create and manage your account and support barangay services. By registering, you consent to this information being stored for those purposes.</p>
                 </details>
 
                 <p class="login-prompt">Already have an account? <a href="{{ route('login') }}">Log In</a></p>

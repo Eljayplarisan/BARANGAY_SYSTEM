@@ -2,11 +2,15 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        @include('partials.mobile-head')
         <title>Barangay Ward II — Blotter & Community Monitoring Portal</title>
-
-        <!-- Favicon -->
-        <link rel="icon" type="image/png" href="{{ asset('images/barangay-logo.png') }}">
+        <meta name="description" content="Official Barangay Ward II Blotter and Community Monitoring Portal. Report incidents, file community concerns, and track blotter resolutions online from your phone, laptop, or computer.">
+        <link rel="canonical" href="{{ url('/') }}">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Barangay Ward II — Blotter & Community Monitoring Portal">
+        <meta property="og:description" content="Report incidents, file community concerns, and track blotter resolutions online for Barangay Ward II.">
+        <meta property="og:url" content="{{ url('/') }}">
+        <meta property="og:image" content="{{ asset('images/barangay-logo.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,6 +66,7 @@
 
             html {
                 scroll-behavior: smooth;
+                overflow-x: hidden;
             }
 
             body {
@@ -71,7 +76,13 @@
                 color: var(--text-main);
                 display: flex;
                 justify-content: center;
+                overflow-x: hidden;
                 -webkit-font-smoothing: antialiased;
+            }
+
+            section[id],
+            article[id] {
+                scroll-margin-top: 84px;
             }
 
             a {
@@ -988,6 +999,29 @@
                 color: #7fd6ff;
             }
 
+            .mobile-menu-toggle {
+                display: none;
+                width: 44px;
+                height: 44px;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--radius-sm);
+                border: 1px solid rgba(255, 255, 255, 0.28);
+                background: rgba(255, 255, 255, 0.1);
+                color: #ffffff;
+                flex-shrink: 0;
+            }
+
+            .mobile-menu-toggle svg {
+                width: 22px;
+                height: 22px;
+                stroke: currentColor;
+                stroke-width: 2.2;
+                fill: none;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
             /* Responsive Design Breakpoints */
             @media (max-width: 1080px) {
                 .interactive-cards-grid {
@@ -1001,31 +1035,82 @@
 
             @media (max-width: 768px) {
                 .topbar {
-                    padding: 12px 20px;
-                    flex-direction: column;
-                    align-items: flex-start;
-                    gap: 14px;
+                    padding: 12px 16px;
+                    flex-wrap: wrap;
+                    gap: 12px;
+                }
+
+                .brand {
+                    gap: 10px;
+                    min-width: 0;
+                    flex: 1;
+                }
+
+                .brand-seal-wrap {
+                    width: 40px;
+                    height: 40px;
+                }
+
+                .brand-mark {
+                    font-size: 1rem;
+                }
+
+                .brand-subtitle {
+                    font-size: 0.68rem;
+                }
+
+                .mobile-menu-toggle {
+                    display: inline-flex;
                 }
 
                 .nav {
+                    display: none;
                     width: 100%;
-                    justify-content: space-between;
-                    flex-wrap: wrap;
-                    gap: 10px;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 8px;
+                    padding-top: 12px;
+                    border-top: 1px solid rgba(255, 255, 255, 0.14);
+                }
+
+                .nav.is-open {
+                    display: flex;
+                }
+
+                .nav-link {
+                    min-height: 44px;
+                    padding: 10px 14px;
+                    border-radius: var(--radius-sm);
+                }
+
+                .auth-btn {
+                    min-height: 44px;
+                    justify-content: center;
+                    margin-top: 4px;
                 }
 
                 .hero {
-                    padding: 36px 20px 54px;
+                    min-height: auto;
+                    padding: 34px 18px 56px;
                 }
 
                 .hero h1 {
-                    font-size: 2.1rem;
+                    font-size: clamp(1.85rem, 8vw, 2.3rem);
+                }
+
+                .hero-lead {
+                    margin-bottom: 24px;
+                    font-size: 0.96rem;
                 }
 
                 .main-content,
                 .support-section {
-                    padding-left: 20px;
-                    padding-right: 20px;
+                    padding-left: 16px;
+                    padding-right: 16px;
+                }
+
+                .portal-card {
+                    padding: 20px 16px 22px;
                 }
 
                 .sub-card-grid,
@@ -1036,21 +1121,56 @@
                 .selected-report-banner {
                     flex-direction: column;
                     align-items: flex-start;
+                    padding: 16px;
                 }
 
                 .selected-actions {
                     width: 100%;
                     justify-content: space-between;
+                    flex-wrap: wrap;
                 }
 
                 .site-footer {
-                    padding: 24px 20px;
+                    padding: 24px 18px calc(24px + env(safe-area-inset-bottom));
                 }
 
                 .footer-content {
                     flex-direction: column;
                     align-items: flex-start;
                     gap: 16px;
+                }
+
+                .footer-links {
+                    flex-wrap: wrap;
+                    gap: 12px 18px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .cta-group {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+
+                .btn-primary,
+                .btn-secondary,
+                .btn-card-action,
+                .btn-select-report,
+                .btn-proceed-filing {
+                    min-height: 46px;
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                .selected-actions {
+                    flex-direction: column-reverse;
+                    align-items: stretch;
+                    gap: 10px;
+                }
+
+                .change-report-btn {
+                    min-height: 42px;
+                    text-align: center;
                 }
             }
         </style>
@@ -1069,7 +1189,11 @@
                     </div>
                 </a>
 
-                <nav class="nav" aria-label="Main Navigation">
+                <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+
+                <nav id="main-nav" class="nav" aria-label="Main Navigation">
                     <a href="{{ url('/') }}" class="nav-link active">Home</a>
                     <a href="#about-section" class="nav-link">About</a>
                     <a href="#support-section" class="nav-link">Services</a>
@@ -1372,6 +1496,22 @@
                 if (portal) {
                     portal.scrollIntoView({ behavior: 'smooth' });
                 }
+            }
+
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            if (mobileMenuToggle && mainNav) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    const isOpen = mainNav.classList.toggle('is-open');
+                    mobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
+                });
+
+                mainNav.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', () => {
+                        mainNav.classList.remove('is-open');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    });
+                });
             }
         </script>
     </body>

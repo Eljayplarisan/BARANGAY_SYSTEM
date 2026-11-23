@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        @include('partials.mobile-head')
         <title>Forgot Password | Barangay Ward II</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,6 +72,12 @@
             }
             .success { border-color: #b8dfc2; background: #effaf1; color: #24613a; }
             .back { display: block; margin-top: 18px; text-align: center; color: #075aab; font-size: 0.82rem; font-weight: 700; text-decoration: none; }
+            @media (max-width: 480px) {
+                body { padding: 12px; }
+                .reset-card { padding: 24px 18px; }
+                .brand { margin: -24px -18px 22px; padding: 16px 18px; }
+                input { font-size: 16px; }
+            }
         </style>
     </head>
     <body>

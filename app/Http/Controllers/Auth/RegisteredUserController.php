@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -23,6 +24,7 @@ class RegisteredUserController extends Controller
             'address' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:30'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'role' => ['required', 'string', Rule::in(User::REGISTERABLE_ROLES)],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'terms_accepted' => ['accepted'],
         ])->validate();
@@ -36,13 +38,15 @@ class RegisteredUserController extends Controller
         ]);
 
         $user->forceFill([
-            'role' => 'resident',
+            'role' => $validated['role'],
             'is_approved' => true,
             'terms_accepted_at' => now(),
         ])->save();
 
+        $roleLabel = $validated['role'] === User::ROLE_SECRETARY ? 'secretary' : 'resident';
+
         return redirect()
             ->route('register')
-            ->with('status', 'Your resident account has been created and automatically approved.');
+            ->with('status', "Your {$roleLabel} account has been created and automatically approved.");
     }
 }

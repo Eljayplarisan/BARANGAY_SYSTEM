@@ -14,6 +14,20 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    public const ROLE_RESIDENT = 'resident';
+
+    public const ROLE_SECRETARY = 'secretary';
+
+    /**
+     * Roles that can be selected during registration.
+     *
+     * @var list<string>
+     */
+    public const REGISTERABLE_ROLES = [
+        self::ROLE_RESIDENT,
+        self::ROLE_SECRETARY,
+    ];
+
     /**
      * The attributes that are mass assignable.
      *

@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        @include('partials.mobile-head')
         <title>{{ $type === 'blotter' ? 'Blotter Report' : 'Submit a Complaint / Concern' }} | Barangay Ward II</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +21,8 @@
             a { color: inherit; text-decoration: none; }
 
             .app-shell {
+                max-width: 1440px;
+                margin: 0 auto;
                 min-height: calc(100vh - 14px);
                 overflow: hidden;
                 border: 1px solid #8bc8f3;
@@ -172,27 +174,56 @@
 
             @media (max-width: 760px) {
                 body { padding: 0; }
-                .app-shell { min-height: 100vh; border-radius: 0; }
-                .dashboard-layout { min-height: calc(100vh - 68px); grid-template-columns: 1fr; }
-                .sidebar { padding: 10px 12px; border-right: 0; border-bottom: 1px solid #b9ddf8; }
-                .side-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
-                .nav-item { min-height: 42px; justify-content: center; gap: 7px; padding: 0 6px; font-size: 0.76rem; }
-                .nav-item svg { width: 18px; height: 18px; flex-basis: 18px; }
+                .app-shell { min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
+                .topbar { position: sticky; top: 0; z-index: 30; min-height: 60px; padding: 10px 14px; gap: 10px; }
+                .user-menu { min-width: 0; gap: 7px; }
+                .user-menu a { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+                .dashboard-layout { min-height: calc(100vh - 60px); grid-template-columns: 1fr; }
+                .sidebar {
+                    position: fixed;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 40;
+                    padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+                    border-right: 0;
+                    border-top: 1px solid #b9ddf8;
+                    background: rgba(250, 253, 255, 0.97);
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 -4px 16px rgba(18, 61, 112, 0.1);
+                }
+                .side-nav { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+                .nav-item.disabled, .nav-item[aria-disabled="true"] { display: none; }
+                .nav-item {
+                    min-height: 50px;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 4px;
+                    padding: 6px 4px;
+                    border-radius: 8px;
+                    font-size: 0.66rem;
+                    line-height: 1.1;
+                    text-align: center;
+                }
+                .nav-item svg { width: 19px; height: 19px; flex-basis: 19px; }
                 .logout-form { margin: 0; }
-                .logout-form button { justify-content: center; }
-                .workspace { padding: 18px 14px; }
+                .logout-form button { justify-content: center; text-align: center; }
+                .workspace { padding: 18px 14px calc(86px + env(safe-area-inset-bottom)); }
+                .field input, .field select, .field textarea { font-size: 16px; }
+                .field input, .field select { height: 44px; }
+                .field textarea { min-height: 96px; }
             }
 
             @media (max-width: 540px) {
-                .topbar { min-height: 62px; padding: 9px 14px; }
-                .brand-mark { font-size: 0.82rem; }
-                .brand-subtitle { font-size: 0.62rem; }
-                .user-menu { gap: 6px; font-size: 0.72rem; }
+                .brand-mark { font-size: 0.88rem; }
+                .brand-subtitle { font-size: 0.64rem; }
+                .user-menu { font-size: 0.74rem; }
                 .user-avatar { width: 30px; height: 30px; }
-                .side-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-                .form-card { padding: 14px; }
-                .field-grid { grid-template-columns: 1fr; gap: 12px; }
+                .form-card { padding: 16px 14px; }
+                .field-grid { grid-template-columns: 1fr; gap: 14px; }
                 .full-width { grid-column: auto; }
+                .form-actions { flex-direction: column-reverse; }
+                .form-actions a, .form-actions button { width: 100%; min-height: 46px; font-size: 0.9rem; }
             }
         </style>
     </head>

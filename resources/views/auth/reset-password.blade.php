@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        @include('partials.mobile-head')
         <title>Choose a New Password | Barangay Ward II</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,6 +69,12 @@
                 background: #fff3f3;
                 color: #8b2525;
                 font-size: 0.8rem;
+            }
+            @media (max-width: 480px) {
+                body { padding: 12px; }
+                .reset-card { padding: 24px 18px; }
+                .brand { margin: -24px -18px 22px; padding: 16px 18px; }
+                input { font-size: 16px; }
             }
         </style>
     </head>

@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        @include('partials.mobile-head')
         <title>Log In | Barangay Ward II</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -385,25 +385,37 @@
                 .form-heading {
                     margin-bottom: 24px;
                 }
+
+                .field-control input[type="email"],
+                .field-control input[type="password"],
+                .field-control input[type="text"] {
+                    height: 46px;
+                    font-size: 16px;
+                }
             }
 
-            @media (max-width: 380px) {
+            @media (max-width: 480px) {
                 body {
-                    padding: 8px;
+                    padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
                 }
 
                 .form-panel {
-                    padding-inline: 16px;
+                    padding: 24px 16px;
                 }
 
                 .form-options {
                     margin-left: 0;
-                    font-size: 0.72rem;
+                    flex-wrap: wrap;
+                    font-size: 0.8rem;
                 }
 
                 .login-button,
                 .register-prompt {
                     margin-left: 0;
+                }
+
+                .login-button {
+                    min-height: 48px;
                 }
             }
         </style>

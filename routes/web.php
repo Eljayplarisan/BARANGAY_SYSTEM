@@ -16,6 +16,25 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        url('/'),
+        route('login'),
+        route('register'),
+    ];
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>'
+        .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+    foreach ($urls as $loc) {
+        $xml .= '<url><loc>'.e($loc).'</loc><changefreq>weekly</changefreq></url>';
+    }
+
+    $xml .= '</urlset>';
+
+    return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
+})->name('sitemap');
+
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

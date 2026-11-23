@@ -19,6 +19,7 @@ class ResidentRegistrationTest extends TestCase
         $response->assertSee('href="'.url('/').'"', false);
         $response->assertSee('Account Role');
         $response->assertSee('Resident');
+        $response->assertSee('Secretary');
     }
 
     public function test_registration_requires_terms_acceptance(): void
@@ -28,6 +29,7 @@ class ResidentRegistrationTest extends TestCase
             'address' => 'Purok 1',
             'phone' => '09123456789',
             'email' => 'resident@example.com',
+            'role' => 'resident',
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
@@ -43,15 +45,15 @@ class ResidentRegistrationTest extends TestCase
             'address' => 'Purok 1',
             'phone' => '09123456789',
             'email' => 'resident@example.com',
+            'role' => 'resident',
             'password' => 'password123',
             'password_confirmation' => 'password123',
             'terms_accepted' => '1',
-            'role' => 'admin',
             'is_approved' => '0',
         ]);
 
         $response->assertRedirect(route('register'));
-        $response->assertSessionHas('status');
+        $response->assertSessionHas('status', 'Your resident account has been created and automatically approved.');
 
         $this->assertDatabaseHas('users', [
             'name' => 'Resident Example',
@@ -65,5 +67,53 @@ class ResidentRegistrationTest extends TestCase
         $user = \App\Models\User::where('email', 'resident@example.com')->firstOrFail();
         $this->assertNotNull($user->terms_accepted_at);
         $this->assertTrue(Hash::check('password123', $user->password));
+    }
+
+    public function test_registration_creates_an_approved_secretary_after_terms_acceptance(): void
+    {
+        $response = $this->post(route('register.store'), [
+            'name' => 'Secretary Example',
+            'address' => 'Barangay Hall',
+            'phone' => '09123456780',
+            'email' => 'secretary@example.com',
+            'role' => 'secretary',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'terms_accepted' => '1',
+            'is_approved' => '0',
+        ]);
+
+        $response->assertRedirect(route('register'));
+        $response->assertSessionHas('status', 'Your secretary account has been created and automatically approved.');
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'Secretary Example',
+            'address' => 'Barangay Hall',
+            'phone' => '09123456780',
+            'email' => 'secretary@example.com',
+            'role' => 'secretary',
+            'is_approved' => true,
+        ]);
+
+        $user = \App\Models\User::where('email', 'secretary@example.com')->firstOrFail();
+        $this->assertNotNull($user->terms_accepted_at);
+        $this->assertTrue(Hash::check('password123', $user->password));
+    }
+
+    public function test_registration_rejects_disallowed_roles(): void
+    {
+        $response = $this->post(route('register.store'), [
+            'name' => 'Invalid Role User',
+            'address' => 'Purok 1',
+            'phone' => '09123456789',
+            'email' => 'admin@example.com',
+            'role' => 'admin',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'terms_accepted' => '1',
+        ]);
+
+        $response->assertSessionHasErrors('role');
+        $this->assertDatabaseMissing('users', ['email' => 'admin@example.com']);
     }
 }

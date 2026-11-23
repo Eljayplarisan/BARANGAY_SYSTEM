@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        @include('partials.mobile-head')
         <title>My Reports | Barangay Ward II</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
             body { min-height: 100vh; margin: 0; padding: 7px; background: #e8f5ff; }
             button, a { font: inherit; }
             a { color: inherit; text-decoration: none; }
-            .app-shell { min-height: calc(100vh - 14px); overflow: hidden; border: 1px solid #8bc8f3; border-radius: 12px; background: #fafdff; box-shadow: 0 10px 28px rgba(21, 89, 144, 0.12); }
+            .app-shell { max-width: 1440px; margin: 0 auto; min-height: calc(100vh - 14px); overflow: hidden; border: 1px solid #8bc8f3; border-radius: 12px; background: #fafdff; box-shadow: 0 10px 28px rgba(21, 89, 144, 0.12); }
             .topbar { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 10px 28px; background: linear-gradient(110deg, #1375cf, #07519a 68%, #064987); color: #fff; }
             .brand { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; }
             .brand-mark { display: block; font-size: 1.05rem; font-weight: 800; letter-spacing: 0.035em; line-height: 1.2; }
@@ -77,30 +77,77 @@
                 .workspace { padding: 18px 14px; }
                 .reports-table th, .reports-table td { padding: 8px 6px; font-size: 0.66rem; }
             }
-            @media (max-width: 700px) {
+            @media (max-width: 760px) {
                 body { padding: 0; }
-                .app-shell { min-height: 100vh; border-radius: 0; }
-                .dashboard-layout { min-height: calc(100vh - 68px); grid-template-columns: 1fr; }
-                .sidebar { padding: 9px 10px; border-right: 0; border-bottom: 1px solid #b9ddf8; }
-                .side-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
-                .nav-item { min-height: 39px; justify-content: center; gap: 6px; padding: 0 5px; font-size: 0.72rem; }
-                .nav-item svg { width: 17px; height: 17px; flex-basis: 17px; }
+                .app-shell { min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
+                .topbar { position: sticky; top: 0; z-index: 30; min-height: 60px; padding: 10px 14px; gap: 10px; }
+                .user-menu { min-width: 0; gap: 7px; }
+                .user-menu span:nth-child(2) { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+                .dashboard-layout { min-height: calc(100vh - 60px); grid-template-columns: 1fr; }
+                .sidebar {
+                    position: fixed;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 40;
+                    padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+                    border-right: 0;
+                    border-top: 1px solid #b9ddf8;
+                    background: rgba(250, 253, 255, 0.97);
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 -4px 16px rgba(18, 61, 112, 0.1);
+                }
+                .side-nav { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+                .nav-item.disabled, .nav-item[aria-disabled="true"] { display: none; }
+                .nav-item {
+                    min-height: 50px;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 4px;
+                    padding: 6px 4px;
+                    border-radius: 8px;
+                    font-size: 0.66rem;
+                    line-height: 1.1;
+                    text-align: center;
+                }
+                .nav-item svg { width: 19px; height: 19px; flex-basis: 19px; }
                 .logout-form { margin: 0; }
-                .logout-form button { justify-content: center; }
-                .workspace { padding: 16px 10px; }
-                .reports-table-wrap { overflow-x: auto; }
-                .reports-table { min-width: 680px; }
+                .logout-form button { justify-content: center; text-align: center; }
+                .workspace { padding: 18px 14px calc(86px + env(safe-area-inset-bottom)); }
+                .reports-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+                .reports-table { min-width: 620px; }
+                .reports-table th, .reports-table td { padding: 10px 10px; font-size: 0.78rem; }
+                .view-link { min-height: 34px; padding: 6px 14px; }
             }
-            @media (max-width: 520px) {
-                .topbar { min-height: 62px; padding: 8px 12px; }
-                .brand-mark { font-size: 0.8rem; }
-                .brand-subtitle { font-size: 0.6rem; }
-                .user-menu { gap: 6px; font-size: 0.68rem; }
+            @media (max-width: 540px) {
+                .brand-mark { font-size: 0.88rem; }
+                .brand-subtitle { font-size: 0.64rem; }
+                .user-menu { font-size: 0.74rem; }
                 .user-avatar { width: 30px; height: 30px; }
-                .side-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-                .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-                .timeline { padding-inline: 2px; }
-                .timeline-step { font-size: 0.55rem; }
+                .detail-header { flex-wrap: wrap; font-size: 0.82rem; }
+                .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+                .detail-label { font-size: 0.72rem; }
+                .detail-value, .detail-description { font-size: 0.82rem; }
+                .timeline {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                    padding: 14px 16px;
+                }
+                .timeline-step {
+                    grid-template-columns: 26px 1fr auto;
+                    align-items: center;
+                    justify-items: start;
+                    gap: 10px;
+                    text-align: left;
+                    font-size: 0.8rem;
+                }
+                .timeline-step:not(:last-child)::after {
+                    top: 24px;
+                    left: 10px;
+                    width: 2px;
+                    height: calc(100% - 8px);
+                }
+                .timeline-date { font-size: 0.72rem; }
             }
         </style>
     </head>
