@@ -1200,7 +1200,7 @@
                     <a href="#contact-section" class="nav-link">Contact</a>
 
                     @auth
-                        <a href="{{ route('resident.dashboard') }}" class="auth-btn">
+                        <a href="{{ auth()->user()->role === \App\Models\User::ROLE_SECRETARY ? route('secretary.dashboard') : route('resident.dashboard') }}" class="auth-btn">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                             Dashboard
                         </a>
@@ -1271,18 +1271,33 @@
                             </div>
 
                             @auth
-                                <div class="sub-card-grid">
-                                    <div class="sub-card">
-                                        <h4>Resident Dashboard</h4>
-                                        <p>Access your central workspace to file blotters, submit complaints, or manage details.</p>
-                                        <a class="btn-card-action btn-login" href="{{ route('resident.dashboard') }}">Open Dashboard</a>
+                                @if (auth()->user()->role === \App\Models\User::ROLE_SECRETARY)
+                                    <div class="sub-card-grid">
+                                        <div class="sub-card">
+                                            <h4>Secretary Dashboard</h4>
+                                            <p>Review incoming resident reports, manage blotters, and schedule consultations.</p>
+                                            <a class="btn-card-action btn-login" href="{{ route('secretary.dashboard') }}">Open Secretary Desk</a>
+                                        </div>
+                                        <div class="sub-card">
+                                            <h4>Incoming Reports</h4>
+                                            <p>Open newly submitted reports waiting to be received and assigned.</p>
+                                            <a class="btn-card-action btn-register" href="{{ route('secretary.reports.incoming') }}">Incoming Queue</a>
+                                        </div>
                                     </div>
-                                    <div class="sub-card">
-                                        <h4>Track Submissions</h4>
-                                        <p>Check real-time status updates and timelines of your active filed reports.</p>
-                                        <a class="btn-card-action btn-register" href="{{ route('resident.reports.index') }}">My Reports</a>
+                                @else
+                                    <div class="sub-card-grid">
+                                        <div class="sub-card">
+                                            <h4>Resident Dashboard</h4>
+                                            <p>Access your central workspace to file blotters, submit complaints, or manage details.</p>
+                                            <a class="btn-card-action btn-login" href="{{ route('resident.dashboard') }}">Open Dashboard</a>
+                                        </div>
+                                        <div class="sub-card">
+                                            <h4>Track Submissions</h4>
+                                            <p>Check real-time status updates and timelines of your active filed reports.</p>
+                                            <a class="btn-card-action btn-register" href="{{ route('resident.reports.index') }}">My Reports</a>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             @else
                                 <div class="sub-card-grid">
                                     <div class="sub-card">

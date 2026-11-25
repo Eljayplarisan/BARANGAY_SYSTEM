@@ -9,7 +9,13 @@ use App\Http\Controllers\ResidentDashboardController;
 use App\Http\Controllers\ResidentReportController;
 use App\Http\Controllers\ResidentMyReportsController;
 use App\Http\Controllers\ResidentProfileController;
+use App\Http\Controllers\SecretaryAppointmentController;
+use App\Http\Controllers\SecretaryDashboardController;
+use App\Http\Controllers\SecretaryReportController;
+use App\Http\Controllers\SecretaryResidentController;
+use App\Http\Controllers\SecretarySettingsController;
 use App\Http\Middleware\EnsureResident;
+use App\Http\Middleware\EnsureSecretary;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -44,6 +50,10 @@ Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->
 Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
 Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
 
+Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', AuthenticatedSessionLogoutController::class)->name('logout');
+});
+
 Route::middleware(['auth', EnsureResident::class])->group(function () {
     Route::get('/dashboard', ResidentDashboardController::class)->name('resident.dashboard');
     Route::get('/reports/create', [ResidentReportController::class, 'create'])->name('resident.reports.create');
@@ -51,5 +61,28 @@ Route::middleware(['auth', EnsureResident::class])->group(function () {
     Route::post('/reports', [ResidentReportController::class, 'store'])->name('resident.reports.store');
     Route::get('/profile', [ResidentProfileController::class, 'edit'])->name('resident.profile.edit');
     Route::put('/profile', [ResidentProfileController::class, 'update'])->name('resident.profile.update');
-    Route::post('/logout', AuthenticatedSessionLogoutController::class)->name('logout');
 });
+
+Route::middleware(['auth', EnsureSecretary::class])
+    ->prefix('secretary')
+    ->name('secretary.')
+    ->group(function () {
+        Route::get('/dashboard', SecretaryDashboardController::class)->name('dashboard');
+        Route::get('/incoming-reports', [SecretaryReportController::class, 'incoming'])->name('reports.incoming');
+        Route::get('/blotter-records', [SecretaryReportController::class, 'blotters'])->name('reports.blotters');
+        Route::post('/blotter-records', [SecretaryReportController::class, 'storeBlotterEntry'])->name('reports.blotters.store');
+        Route::get('/case-management', [SecretaryReportController::class, 'cases'])->name('cases.index');
+        Route::patch('/case-management/{report}/assignment', [SecretaryReportController::class, 'updateAssignment'])->name('cases.assignment');
+        Route::get('/reports/{report}', [SecretaryReportController::class, 'show'])->name('reports.show');
+        Route::patch('/reports/{report}/status', [SecretaryReportController::class, 'updateStatus'])->name('reports.status');
+        Route::post('/reports/{report}/notes', [SecretaryReportController::class, 'storeNote'])->name('reports.notes.store');
+        Route::get('/reports/{report}/attachment', [SecretaryReportController::class, 'attachment'])->name('reports.attachment');
+        Route::get('/residents', [SecretaryResidentController::class, 'index'])->name('residents.index');
+        Route::get('/appointments', [SecretaryAppointmentController::class, 'index'])->name('appointments.index');
+        Route::post('/appointments', [SecretaryAppointmentController::class, 'store'])->name('appointments.store');
+        Route::patch('/appointments/{appointment}', [SecretaryAppointmentController::class, 'update'])->name('appointments.update');
+        Route::get('/settings', [SecretarySettingsController::class, 'index'])->name('settings.index');
+        Route::get('/settings/export-csv', [SecretarySettingsController::class, 'exportCsv'])->name('settings.export');
+        Route::put('/settings', [SecretarySettingsController::class, 'update'])->name('settings.update');
+        Route::put('/settings/password', [SecretarySettingsController::class, 'updatePassword'])->name('settings.password');
+    });

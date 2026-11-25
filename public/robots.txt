@@ -4,5 +4,6 @@ Disallow: /dashboard
 Disallow: /reports/
 Disallow: /my-reports
 Disallow: /profile
+Disallow: /secretary
 
 Sitemap: https://barangay-ward-ii.onrender.com/sitemap.xml

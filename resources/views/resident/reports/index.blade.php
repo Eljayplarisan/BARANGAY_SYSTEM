@@ -236,6 +236,9 @@
                                 <div><span class="detail-label">Location</span><span class="detail-value">{{ $selectedReport->location }}</span></div>
                             </div>
                             <div class="detail-description"><strong>Description</strong>{{ $selectedReport->description }}</div>
+                            @if ($selectedReport->resident_message)
+                                <div class="detail-description" style="background:#f3f9ff;"><strong>Latest Update</strong>{{ $selectedReport->resident_message }}</div>
+                            @endif
                             <div class="timeline" id="report-timeline" aria-label="Report progress timeline">
                                 @foreach ($timeline as $step)
                                     <div class="timeline-step {{ $step['state'] }}">

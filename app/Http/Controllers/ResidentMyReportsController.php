@@ -43,13 +43,25 @@ class ResidentMyReportsController extends Controller
         $steps = ['Submitted', 'Received', 'Referred', 'Ongoing', 'Resolved', 'Closed'];
         $currentStep = array_search(ucfirst($report->status), $steps, true);
         $currentStep = $currentStep === false ? 0 : $currentStep;
+        $history = is_array($report->status_history) ? $report->status_history : [];
 
         return array_map(
-            fn (string $label, int $index): array => [
-                'label' => $label,
-                'date' => $index === 0 ? $report->created_at->format('M j') : '',
-                'state' => $index < $currentStep ? 'complete' : ($index === $currentStep ? 'current' : 'upcoming'),
-            ],
+            function (string $label, int $index) use ($report, $currentStep, $history): array {
+                $key = strtolower($label);
+                $date = '';
+
+                if ($index === 0) {
+                    $date = $report->created_at->format('M j');
+                } elseif (! empty($history[$key]['at'])) {
+                    $date = \Carbon\Carbon::parse($history[$key]['at'])->format('M j');
+                }
+
+                return [
+                    'label' => $label,
+                    'date' => $date,
+                    'state' => $index < $currentStep ? 'complete' : ($index === $currentStep ? 'current' : 'upcoming'),
+                ];
+            },
             $steps,
             array_keys($steps)
         );
